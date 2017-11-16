@@ -1,0 +1,26 @@
+{
+  "name": "leaflet.styledlayercontrol",
+  "version": "1.0.0",
+  "description": "Leaflet.StyledLayerControl\r ===================",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BenGedi/Leaflet.StyledLayerControl.git"
+  },
+  "keywords": [
+    "leaflet",
+    "leaflet.styledlayercontrol"
+  ],
+  "author": "Ben Gedi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BenGedi/Leaflet.StyledLayerControl/issues"
+  },
+  "homepage": "https://github.com/BenGedi/Leaflet.StyledLayerControl#readme"
+}
