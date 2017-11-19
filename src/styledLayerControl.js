@@ -319,7 +319,7 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
 
     _checkIfDisabled: function(layers) {
         var currentZoom = this._map.getZoom();
-
+        
         for (layerId in this._layers) {
             if (this._layers[layerId].layer.options && (this._layers[layerId].layer.options.minZoom || this._layers[layerId].layer.options.maxZoom)) {
                 var el = document.getElementById('ac_layer_input_' + this._layers[layerId].layer._leaflet_id);
