@@ -16,7 +16,7 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
             j;
         L.Util.setOptions(this, options);
 
-        this._layers = {};
+        this._layerControlInputs = {};
         this._lastZIndex = 0;
         this._handlingClick = false;
         this._groupList = [];
@@ -69,7 +69,7 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
 
     removeLayer: function(layer) {
         var id = L.Util.stamp(layer);
-        delete this._layers[id];
+        delete this._layerControlInputs[id];
         this._update();
         return this;
     },
@@ -77,12 +77,12 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
     removeGroup: function(group_Name, del) {
         for (group in this._groupList) {
             if (this._groupList[group].groupName == group_Name) {
-                for (layer in this._layers) {
-                    if (this._layers[layer].group && this._layers[layer].group.name == group_Name) {
+                for (layer in this._layerControlInputs) {
+                    if (this._layerControlInputs[layer].group && this._layerControlInputs[layer].group.name == group_Name) {
                         if (del) {
-                            this._map.removeLayer(this._layers[layer].layer);
+                            this._map.removeLayer(this._layerControlInputs[layer].layer);
                         }
-                        delete this._layers[layer];
+                        delete this._layerControlInputs[layer];
                     }
                 }
                 delete this._groupList[group];
@@ -94,12 +94,12 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
 
     removeAllGroups: function(del) {
         for (group in this._groupList) {
-                for (layer in this._layers) {
-                    if (this._layers[layer].group && this._layers[layer].group.removable) {
+                for (layer in this._layerControlInputs) {
+                    if (this._layerControlInputs[layer].group && this._layerControlInputs[layer].group.removable) {
                         if (del) {
-                            this._map.removeLayer(this._layers[layer].layer);
+                            this._map.removeLayer(this._layerControlInputs[layer].layer);
                         }
-                        delete this._layers[layer];
+                        delete this._layerControlInputs[layer];
                     }
                 }
                 delete this._groupList[group];
@@ -128,12 +128,12 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
     changeGroup: function(group_Name, select) {
         for (group in this._groupList) {
             if (this._groupList[group].groupName == group_Name) {
-                for (layer in this._layers) {
-                    if (this._layers[layer].group && this._layers[layer].group.name == group_Name) {
+                for (layer in this._layerControlInputs) {
+                    if (this._layerControlInputs[layer].group && this._layerControlInputs[layer].group.name == group_Name) {
                         if (select) {
-                            this._map.addLayer(this._layers[layer].layer);
+                            this._map.addLayer(this._layerControlInputs[layer].layer);
                         } else {
-                            this._map.removeLayer(this._layers[layer].layer);
+                            this._map.removeLayer(this._layerControlInputs[layer].layer);
                         }
                     }
                 }
@@ -230,7 +230,7 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
     _addLayer: function(layer, name, group, overlay) {
         var id = L.Util.stamp(layer);
 
-        this._layers[id] = {
+        this._layerControlInputs[id] = {
             layer: layer,
             name: name,
             overlay: overlay
@@ -253,7 +253,7 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
                 groupId = this._groupList.push(group) - 1;
             }
 
-            this._layers[id].group = {
+            this._layerControlInputs[id].group = {
                 name: group.groupName,
                 id: groupId,
                 expanded: group.expanded,
@@ -282,8 +282,8 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
             i,
             obj;
 
-        for (i in this._layers) {
-            obj = this._layers[i];
+        for (i in this._layerControlInputs) {
+            obj = this._layerControlInputs[i];
             this._addItem(obj);
             overlaysPresent = overlaysPresent || obj.overlay;
             baseLayersPresent = baseLayersPresent || !obj.overlay;
@@ -292,7 +292,7 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
     },
 
     _onLayerChange: function(e) {
-        var obj = this._layers[L.Util.stamp(e.layer)];
+        var obj = this._layerControlInputs[L.Util.stamp(e.layer)];
 
         if (!obj) {
             return;
@@ -320,10 +320,10 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
     _checkIfDisabled: function(layers) {
         var currentZoom = this._map.getZoom();
         
-        for (layerId in this._layers) {
-            if (this._layers[layerId].layer.options && (this._layers[layerId].layer.options.minZoom || this._layers[layerId].layer.options.maxZoom)) {
-                var el = document.getElementById('ac_layer_input_' + this._layers[layerId].layer._leaflet_id);
-                if (currentZoom < this._layers[layerId].layer.options.minZoom || currentZoom > this._layers[layerId].layer.options.maxZoom) {
+        for (layerId in this._layerControlInputs) {
+            if (this._layerControlInputs[layerId].layer.options && (this._layerControlInputs[layerId].layer.options.minZoom || this._layerControlInputs[layerId].layer.options.maxZoom)) {
+                var el = document.getElementById('ac_layer_input_' + this._layerControlInputs[layerId].layer._leaflet_id);
+                if (currentZoom < this._layerControlInputs[layerId].layer.options.minZoom || currentZoom > this._layerControlInputs[layerId].layer.options.maxZoom) {
                     el.disabled = 'disabled';
                 } else {
                     el.disabled = '';
@@ -528,7 +528,7 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
 
         for (i = 0; i < inputsLen; i++) {
             input = inputs[i];
-            obj = this._layers[input.layerId];
+            obj = this._layerControlInputs[input.layerId];
 
             if (!obj) {
                 continue;
@@ -547,7 +547,7 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
 
     _onDeleteClick: function(obj) {
         var node = obj.target.parentElement.childNodes[0];
-        n_obj = this._layers[node.layerId];
+        n_obj = this._layerControlInputs[node.layerId];
 
         // verify if obj is a basemap and checked to not remove
         if (!n_obj.overlay && node.checked) {
