@@ -318,6 +318,7 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
     },
 
     _checkIfDisabled: function(layers) {
+        if(!this._map) return ;
         var currentZoom = this._map.getZoom();
         
         for (layerId in this._layerControlInputs) {
@@ -348,6 +349,7 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
     },
 
     _addItem: function(obj) {
+        if (!this._map) return;
         var label = document.createElement('div'),
             input,
             checked = this._map.hasLayer(obj.layer),
@@ -518,6 +520,7 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
     },
 
     _onInputClick: function() {
+        if(!this._form) return;
         var i,
             input,
             obj,
@@ -583,7 +586,6 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
         this._container.className = this._container.className.replace(' leaflet-control-layers-expanded', '');
     }
 });
-
 L.Control.styledLayerControl = function(baseLayers, overlays, options) {
     return new L.Control.StyledLayerControl(baseLayers, overlays, options);
 };
