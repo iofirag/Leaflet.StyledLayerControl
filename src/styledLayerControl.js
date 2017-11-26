@@ -308,7 +308,7 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
 
         this._checkIfDisabled();
 
-        if (type) {
+        if (type && this._map) {
             this._map.fire(type, obj);
         }
     },
