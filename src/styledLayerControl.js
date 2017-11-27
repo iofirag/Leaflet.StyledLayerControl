@@ -3,6 +3,11 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
         collapsed: true,
         position: 'topright',
         autoZIndex: true,
+        controller: true,
+        controller_callbacks: {
+            load: function(event) { console.log('load: ', event) },
+            import: function(event) { console.log('import: ', event) }
+        },
         group_togglers: {
             show: false,
             labelAll: 'All',
@@ -33,6 +38,7 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
                 this._addLayer(groupedOverlays[i].layers[j], j, groupedOverlays[i], true);
             }
         }
+
 
 
     },
@@ -143,10 +149,53 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
         this._update();
     },
 
+    _onChangeImport: function(event) {
+        var file = event.target.files[0];
+        var self = this;
+
+		if (file) {
+			var fileName = file.name;
+            var reader   = new FileReader();
+            
+			reader.onload = function(event) {
+				self.options.controller_callbacks.import(reader.result, fileName);
+			};
+			reader.readAsText(file);
+		}
+    },
+
+    _createController: function() {
+        var headerController = this._headerController = L.DomUtil.create('div', 'lc-header', this._container),
+            importId = 'lc-import',
+            importInput = L.DomUtil.create('input', 'lc-import-input'),
+            importLabel = L.DomUtil.create('label', 'lc-import-label');
+
+        importInput.style.display = 'none';
+        importInput.setAttribute('type', 'file');
+        importInput.setAttribute('id', importId);
+        importLabel.setAttribute('for', importId);
+        
+        importLabel.innerText = 'Import';
+
+        L.DomEvent
+            .on(importInput, 'change', L.DomEvent.stop)
+            .on(importInput, 'change', this._onChangeImport, this);
+
+        importLabel.appendChild(importInput);
+        headerController.appendChild(importLabel);
+    },
 
     _initLayout: function() {
         var className = 'leaflet-control-layers',
-            container = this._container = L.DomUtil.create('div', className);
+            container = this._container = L.DomUtil.create('div', className),
+            headerController;
+
+        if (this.options.controller) {
+            this._createController()
+
+
+        }
+        
 
         //Makes this work on IE10 Touch devices by stopping it from firing a mouseout event when the touch is released
         container.setAttribute('aria-haspopup', true);
@@ -308,7 +357,7 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
 
         this._checkIfDisabled();
 
-        if (type && this._map) {
+        if (this._map && type) {
             this._map.fire(type, obj);
         }
     },

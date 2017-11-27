@@ -28,6 +28,14 @@
 	height: auto;
 }
 
+.lc-import-label {
+    cursor: pointer;
+}
+
+.lc-header {
+    border-bottom: 1px solid lightgrey;
+}
+
 div[id^="leaflet-control-accordion-layers"] > label {
 	font-family: 'BebasNeueRegular', 'Arial Narrow', Arial, sans-serif;
 	padding: 5px 20px;
