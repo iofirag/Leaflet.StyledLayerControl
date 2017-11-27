@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/BenGedi/Leaflet.StyledLayerControl/issues"
   },
-  "homepage": "https://github.com/BenGedi/Leaflet.StyledLayerControl#readme"
+  "homepage": "https://github.com/BenGedi/Leaflet.StyledLayerControl#readme",
+  "dependencies": {
+    "material-design-lite": "^1.3.0"
+  }
 }

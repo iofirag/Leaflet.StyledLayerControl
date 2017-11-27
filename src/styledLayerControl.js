@@ -21,6 +21,14 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
             j;
         L.Util.setOptions(this, options);
 
+        if(!document.getElementById('id2')) {
+            var link = document.createElement('link');
+            link.id = 'id2';
+            link.rel = 'stylesheet';
+            link.href = '/node_modules/material-design-lite/material.min.css';
+            document.head.appendChild(link);
+        }
+
         this._layerControlInputs = {};
         this._lastZIndex = 0;
         this._handlingClick = false;
