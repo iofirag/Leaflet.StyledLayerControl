@@ -1,3 +1,7 @@
+// require('material-design-lite/material.min.css');
+// require('material-design-lite/material.min.js');
+// require('../css/MaterialIcons.css');
+
 L.Control.StyledLayerControl = L.Control.Layers.extend({
     options: {
         collapsed: true,
@@ -21,13 +25,20 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
             j;
         L.Util.setOptions(this, options);
 
-        if(!document.getElementById('id2')) {
-            var link = document.createElement('link');
-            link.id = 'id2';
-            link.rel = 'stylesheet';
-            link.href = '/node_modules/material-design-lite/material.min.css';
-            document.head.appendChild(link);
-        }
+        // if(!document.getElementById('id2')) {
+        //     var link = document.createElement('link');
+        //     link.id = 'id2';
+        //     link.rel = 'stylesheet';
+        //     link.href = '/node_modules/material-design-lite/material.min.css';
+        //     document.head.appendChild(link);
+        // }
+
+        // if(!document.getElementById('id1')) {
+        //     var script = document.createElement('script');
+        //     script.id = 'id1';
+        //     script.src = '/node_modules/material-design-lite/material.min.js';
+        //     document.head.appendChild(script);
+        // }
 
         this._layerControlInputs = {};
         this._lastZIndex = 0;
