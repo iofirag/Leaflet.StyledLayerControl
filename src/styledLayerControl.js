@@ -87,6 +87,11 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
         return this;
     },
 
+    deleteLayer: function(layer) {
+        this.unSelectLayer(layer);
+        this.removeLayer(layer);
+    },
+
     removeLayer: function(layer) {
         var id = L.Util.stamp(layer);
         delete this._layerControlInputs[id];
