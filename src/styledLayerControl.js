@@ -56,8 +56,6 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
             }
         }
 
-
-
     },
 
     onAdd: function(map) {
@@ -84,8 +82,8 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
         return this;
     },
 
-    addOverlay: function(layer, name, group) {
-        this._addLayer(layer, name, group, true);
+    addOverlay: function(layer, name, group, className) {
+        this._addLayer(layer, name, group, true, className);
         this._update();
         return this;
     },
@@ -178,7 +176,7 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
 		if (file) {
 			var fileName = file.name;
             var reader   = new FileReader();
-            
+
 			reader.onload = function(event) {
 				self.options.controller_callbacks.import(reader.result, fileName);
 			};
@@ -196,7 +194,7 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
         importInput.setAttribute('type', 'file');
         importInput.setAttribute('id', importId);
         importLabel.setAttribute('for', importId);
-        
+
         importLabel.innerText = 'Import';
 
         L.DomEvent
@@ -213,11 +211,8 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
             headerController;
 
         if (this.options.controller) {
-            this._createController()
-
-
+            this._createController();
         }
-        
 
         //Makes this work on IE10 Touch devices by stopping it from firing a mouseout event when the touch is released
         container.setAttribute('aria-haspopup', true);
@@ -298,7 +293,7 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
         return value;
     },
 
-    _addLayer: function(layer, name, group, overlay) {
+    _addLayer: function(layer, name, group, overlay, className) {
         var id = L.Util.stamp(layer);
 
         this._layerControlInputs[id] = {
@@ -306,6 +301,10 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
             name: name,
             overlay: overlay
         };
+
+        if (className) {
+            Object.assign(this._layerControlInputs[id], {className: className});
+        }
 
         if (group) {
             var groupId = this._groupList.indexOf(group);
@@ -338,7 +337,7 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
         }
     },
 
-    _update: function() {
+    _update: function(className) {
         if (!this._container) {
             return;
         }
@@ -355,7 +354,7 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
 
         for (i in this._layerControlInputs) {
             obj = this._layerControlInputs[i];
-            this._addItem(obj);
+            this._addItem(obj, className);
             overlaysPresent = overlaysPresent || obj.overlay;
             baseLayersPresent = baseLayersPresent || !obj.overlay;
         }
@@ -391,7 +390,7 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
     _checkIfDisabled: function(layers) {
         if(!this._map) return ;
         var currentZoom = this._map.getZoom();
-        
+
         for (layerId in this._layerControlInputs) {
             if (this._layerControlInputs[layerId].layer.options && (this._layerControlInputs[layerId].layer.options.minZoom || this._layerControlInputs[layerId].layer.options.maxZoom)) {
                 var el = document.getElementById('ac_layer_input_' + this._layerControlInputs[layerId].layer._leaflet_id);
@@ -419,7 +418,7 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
         return radioFragment.firstChild;
     },
 
-    _addItem: function(obj) {
+    _addItem: function(obj, className) {
         if (!this._map) return;
         var label = document.createElement('div'),
             input,
@@ -434,7 +433,7 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
             input.className = 'leaflet-control-layers-selector';
             input.defaultChecked = checked;
 
-            label.className = "menu-item-checkbox";
+            label.className = (obj.className !== undefined) ? "menu-item-checkbox" + ' ' + obj.className :"menu-item-checkbox";
             input.id = id;
 
             if(this.options.callbacks.onChangeCheckbox) {
@@ -450,12 +449,12 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
             input.id = id;
         }
 
-
         input.layerId = L.Util.stamp(obj.layer);
 
         L.DomEvent.on(input, 'click', this._onInputClick, this);
 
         var name = document.createElement('label');
+
         name.innerHTML = '<label for="' + id + '">' + obj.name + '</label>';
 
         label.appendChild(input);
@@ -476,9 +475,7 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
             if (obj.layer.StyledLayerControl.visible) {
                 this._map.addLayer(obj.layer);
             }
-
         }
-
 
         if (obj.overlay) {
             container = this._overlaysList;
