@@ -12,6 +12,9 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
             labelAll: 'All',
             labelNone: 'None'
         },
+        callbacks: {
+            onChangeCheckbox: null
+        },
         groupDeleteLabel: 'Delete the group'
     },
 
@@ -433,6 +436,12 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
 
             label.className = "menu-item-checkbox";
             input.id = id;
+
+            if(this.options.callbacks.onChangeCheckbox) {
+                input.addEventListener('change', function onChangeCheckbox(event) {
+                    this.options.callbacks.onChangeCheckbox(event, obj);
+                }.bind(this));
+            }
 
         } else {
             input = this._createRadioElement('leaflet-base-layers', checked);
