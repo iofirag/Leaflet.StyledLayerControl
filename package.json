@@ -1,6 +1,6 @@
 {
   "name": "leaflet.styledlayercontrol",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Leaflet.StyledLayerControl\r ===================",
   "main": "./src/styledLayerControl.js",
   "directories": {
