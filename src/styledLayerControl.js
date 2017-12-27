@@ -1,6 +1,4 @@
-require('material-design-lite/material.min.css');
 require('material-design-lite/material.min.js');
-require('../css/MaterialIcons.css');
 
 L.Control.StyledLayerControl = L.Control.Layers.extend({
     options: {
