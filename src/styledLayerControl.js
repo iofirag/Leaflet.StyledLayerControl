@@ -1,3 +1,5 @@
+'use strict';
+
 require('material-design-lite/material.min.js');
 
 L.Control.StyledLayerControl = L.Control.Layers.extend({
@@ -17,8 +19,8 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
     },
 
     initialize: function(baseLayers, groupedOverlays, options) {
-        var i,
-            j;
+        // var i,
+        //     j;
         L.Util.setOptions(this, options);
 
         // if(!document.getElementById('material-min-css')) {
@@ -42,13 +44,13 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
         this._groupList = [];
         this._domGroups = [];
 
-        for (i in baseLayers) {
+        for (var i in baseLayers) {
             for (var j in baseLayers[i].layers) {
                 this._addLayer(baseLayers[i].layers[j], j, baseLayers[i], false);
             }
         }
 
-        for (i in groupedOverlays) {
+        for (var i in groupedOverlays) {
             for (var j in groupedOverlays[i].layers) {
                 this._addLayer(groupedOverlays[i].layers[j], j, groupedOverlays[i], true);
             }
@@ -101,7 +103,7 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
     removeGroup: function(group_Name, del) {
         for (group in this._groupList) {
             if (this._groupList[group].groupName == group_Name) {
-                for (layer in this._layerControlInputs) {
+                for (var layer in this._layerControlInputs) {
                     if (this._layerControlInputs[layer].group && this._layerControlInputs[layer].group.name == group_Name) {
                         if (del) {
                             this._map.removeLayer(this._layerControlInputs[layer].layer);
@@ -117,8 +119,8 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
     },
 
     removeAllGroups: function(del) {
-        for (group in this._groupList) {
-                for (layer in this._layerControlInputs) {
+        for (var group in this._groupList) {
+                for (var layer in this._layerControlInputs) {
                     if (this._layerControlInputs[layer].group && this._layerControlInputs[layer].group.removable) {
                         if (del) {
                             this._map.removeLayer(this._layerControlInputs[layer].layer);
@@ -150,9 +152,9 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
     },
 
     changeGroup: function(group_Name, select) {
-        for (group in this._groupList) {
+        for (var group in this._groupList) {
             if (this._groupList[group].groupName == group_Name) {
-                for (layer in this._layerControlInputs) {
+                for (var layer in this._layerControlInputs) {
                     if (this._layerControlInputs[layer].group && this._layerControlInputs[layer].group.name == group_Name) {
                         if (select) {
                             this._map.addLayer(this._layerControlInputs[layer].layer);
@@ -310,7 +312,7 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
 
             // if not find the group search for the name
             if (groupId === -1) {
-                for (g in this._groupList) {
+                for (var g in this._groupList) {
                     if (this._groupList[g].groupName == group.groupName) {
                         groupId = g;
                         break;
@@ -623,7 +625,7 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
 
     _onDeleteClick: function(obj) {
         var node = obj.target.parentElement.childNodes[0];
-        n_obj = this._layerControlInputs[node.layerId];
+        var n_obj = this._layerControlInputs[node.layerId];
 
         // verify if obj is a basemap and checked to not remove
         if (!n_obj.overlay && node.checked) {
