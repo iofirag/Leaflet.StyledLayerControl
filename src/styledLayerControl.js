@@ -260,7 +260,8 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
         container.appendChild(section);
 
         // process options of ac-container css class - to options.container_width and options.container_maxHeight
-        for (var c = 0; c < (containers = container.getElementsByClassName('ac-container')).length; c++) {
+        var containers = container.getElementsByClassName('ac-container') || 0;
+        for (var c = 0; c < containers.length; c++) {
             if (this.options.container_width) {
                 containers[c].style.width = this.options.container_width;
             }
@@ -268,7 +269,6 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
             // set the max-height of control to y value of map object
             this._default_maxHeight = this.options.container_maxHeight ? this.options.container_maxHeight : (this._map.getSize().y - 70);
             containers[c].style.maxHeight = this._default_maxHeight + "px";
-
         }
 
         window.onresize = this._on_resize_window.bind(this);
@@ -276,6 +276,7 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
     },
 
     _on_resize_window: function() {
+        var containers = document.getElementsByClassName('ac-container') || 0;
         // listen to resize of screen to reajust de maxHeight of container
         for (var c = 0; c < containers.length; c++) {
             // input the new value to height
@@ -389,7 +390,7 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
         if(!this._map) return ;
         var currentZoom = this._map.getZoom();
 
-        for (layerId in this._layerControlInputs) {
+        for (var layerId in this._layerControlInputs) {
             if (this._layerControlInputs[layerId].layer.options && (this._layerControlInputs[layerId].layer.options.minZoom || this._layerControlInputs[layerId].layer.options.maxZoom)) {
                 var el = document.getElementById('ac_layer_input_' + this._layerControlInputs[layerId].layer._leaflet_id);
                 if (currentZoom < this._layerControlInputs[layerId].layer.options.minZoom || currentZoom > this._layerControlInputs[layerId].layer.options.maxZoom) {
@@ -494,10 +495,10 @@ L.Control.StyledLayerControl = L.Control.Layers.extend({
             // verify if type is exclusive
             var s_type_exclusive = this.options.exclusive ? ' type="radio" ' : ' type="checkbox" ';
 
-            inputElement = '<input id="ac' + obj.group.id + '" name="accordion-1" class="menu" ' + s_expanded + s_type_exclusive + '/>';
-            inputLabel = '<label for="ac' + obj.group.id + '">' + obj.group.name + '</label>';
+            var inputElement = '<input id="ac' + obj.group.id + '" name="accordion-1" class="menu" ' + s_expanded + s_type_exclusive + '/>';
+            var inputLabel = '<label for="ac' + obj.group.id + '">' + obj.group.name + '</label>';
 
-            article = document.createElement('article');
+            var article = document.createElement('article');
             article.className = 'ac-large';
             article.appendChild(label);
 
