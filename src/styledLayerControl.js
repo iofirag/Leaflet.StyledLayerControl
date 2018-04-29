@@ -1,6 +1,6 @@
 'use strict';
 
-import 'material-design-lite/material.min.js';
+require('material-design-lite/material.min.js');
 
 L.Control.StyledLayerControl = L.Control.Layers.extend({
     options: {
